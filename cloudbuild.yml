@@ -18,3 +18,7 @@ availableSecrets:
   secretManager:
     - versionName: projects/829384349826/secrets/orders_database_url/versions/1
       env: 'DATABASE_URL'
+
+options:
+  logging: CLOUD_LOGGING_ONLY # Los registros se almacenarán solo en Cloud Logging
+serviceAccount: 'my-service-account@tienda-microservicios-448420.iam.gserviceaccount.com' # Cambia por tu cuenta de servicio personalizada
