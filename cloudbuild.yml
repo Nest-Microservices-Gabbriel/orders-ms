@@ -1,15 +1,12 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
     args:
-      [
-        'build',
-        '-t',
-        'southamerica-west1-docker.pkg.dev/tienda-microservicios-448420/image-registry/orders-ms',
-        '-f',
-        'dockerfile.prod',
-        '--platform=linux/amd64',
-        '.',
-      ]
+      - -c
+      - |
+        docker build -t southamerica-west1-docker.pkg.dev/tienda-microservicios-448420/image-registry/orders-ms -f dockerfile.prod --platform=linux/amd64 --build-arg ORDERS_DATABASE_URL=$$DATABASE_URL .
+    secretEnv: ['DATABASE_URL']
+
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -17,6 +14,7 @@ steps:
         'southamerica-west1-docker.pkg.dev/tienda-microservicios-448420/image-registry/orders-ms',
       ]
 
-options:
-  logging: CLOUD_LOGGING_ONLY # Usa solo Cloud Logging para los registros
-serviceAccount: 'my-service-account@tienda-microservicios-448420.iam.gserviceaccount.com' # Reemplaza con tu cuenta de servicio personalizada
+availableSecrets:
+  secretManager:
+    - versionName: projects/829384349826/secrets/orders_database_url/versions/1
+      env: 'DATABASE_URL'
